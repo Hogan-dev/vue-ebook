@@ -2,9 +2,21 @@ import { mapActions, mapGetters } from 'vuex'
 
 export const ebookMixin = {
   computed: {
-    ...mapGetters(['fileName', 'menuVisible'])
+    ...mapGetters([
+      'fileName',
+      'menuVisible',
+      'settingVisible',
+      'defaultFontSize',
+      'currentBook'
+    ])
   },
   methods: {
-    ...mapActions(['setMenuVisible', 'setFileName'])
+    ...mapActions([
+      'setMenuVisible',
+      'setFileName',
+      'setSettingVisible',
+      'setDefaultFontSize',
+      'setCurrentBook'
+    ])
   }
 }

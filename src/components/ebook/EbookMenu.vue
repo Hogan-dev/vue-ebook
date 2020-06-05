@@ -1,29 +1,36 @@
 <template>
-  <transition name="slide-up">
-    <div class="menu-wrapper" v-show="menuVisible">
-      <div class="icon-wrapper">
-        <span class="icon-menu" @click="showSetting(3)"></span>
+  <div>
+    <transition name="slide-up">
+      <div class="menu-wrapper" :class="{'hide-box-shadow': !settingVisible}" v-show="menuVisible">
+        <div class="icon-wrapper">
+          <span class="icon-menu" @click="showSetting(3)"></span>
+        </div>
+        <div class="icon-wrapper">
+          <span class="icon-progress" @click="showSetting(2)"></span>
+        </div>
+        <div class="icon-wrapper">
+          <span class="icon-bright" @click="showSetting(1)"></span>
+        </div>
+        <div class="icon-wrapper">
+          <span class="icon-A" @click="showSetting(0)"></span>
+        </div>
       </div>
-      <div class="icon-wrapper">
-        <span class="icon-progress" @click="showSetting(2)"></span>
-      </div>
-      <div class="icon-wrapper">
-        <span class="icon-bright" @click="showSetting(1)"></span>
-      </div>
-      <div class="icon-wrapper">
-        <span class="icon-A" @click="showSetting(0)"></span>
-      </div>
-    </div>
-  </transition>
+    </transition>
+    <ebook-setting-font></ebook-setting-font>
+  </div>
 </template>
 
 <script>
+import EbookSettingFont from './EbookSettingFont'
 import { ebookMixin } from '../../utils/mixin'
 export default {
   mixins: [ebookMixin],
+  components: {
+    EbookSettingFont
+  },
   methods: {
     showSetting (key) {
-      console.log(key)
+      this.setSettingVisible(key)
     }
   }
 }
@@ -42,6 +49,9 @@ export default {
   background: #fff;
   box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15);
   font-size: px2rem(20);
+  &.hide-box-shadow {
+    box-shadow: none;
+  }
   .icon-wrapper {
     flex: 1;
     @include center;
