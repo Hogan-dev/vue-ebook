@@ -1,4 +1,5 @@
 import { mapActions, mapGetters } from 'vuex'
+import { themeList } from './book'
 
 export const ebookMixin = {
   computed: {
@@ -9,8 +10,12 @@ export const ebookMixin = {
       'defaultFontSize',
       'currentBook',
       'defaultFontFamily',
-      'fontFamilyVisible'
-    ])
+      'fontFamilyVisible',
+      'defaultTheme'
+    ]),
+    themeList () {
+      return themeList(this)
+    }
   },
   methods: {
     ...mapActions([
@@ -20,7 +25,8 @@ export const ebookMixin = {
       'setDefaultFontSize',
       'setCurrentBook',
       'setDefaultFontFamily',
-      'setFontFamilyVisible'
+      'setFontFamilyVisible',
+      'setDefaultTheme'
     ])
   }
 }
