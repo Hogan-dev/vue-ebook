@@ -1,5 +1,5 @@
 import { mapActions, mapGetters } from 'vuex'
-import { themeList } from './book'
+import { setGlobalTheme, themeList } from './book'
 
 export const ebookMixin = {
   computed: {
@@ -11,7 +11,9 @@ export const ebookMixin = {
       'currentBook',
       'defaultFontFamily',
       'fontFamilyVisible',
-      'defaultTheme'
+      'defaultTheme',
+      'bookAvailable',
+      'progress'
     ]),
     themeList () {
       return themeList(this)
@@ -26,7 +28,26 @@ export const ebookMixin = {
       'setCurrentBook',
       'setDefaultFontFamily',
       'setFontFamilyVisible',
-      'setDefaultTheme'
-    ])
+      'setDefaultTheme',
+      'setBookAvailable'
+    ]),
+    initGlobalStyle () {
+      switch (this.defaultTheme) {
+        case 'Default':
+          setGlobalTheme(`${process.env.VUE_APP_RES_URL}/theme/theme_default.css`)
+          break
+        case 'Eye':
+          setGlobalTheme(`${process.env.VUE_APP_RES_URL}/theme/theme_eye.css`)
+          break
+        case 'Gold':
+          setGlobalTheme(`${process.env.VUE_APP_RES_URL}/theme/theme_gold.css`)
+          break
+        case 'Night':
+          setGlobalTheme(`${process.env.VUE_APP_RES_URL}/theme/theme_night.css`)
+          break
+        default:
+          setGlobalTheme(`${process.env.VUE_APP_RES_URL}/theme/theme_default.css`)
+      }
+    }
   }
 }

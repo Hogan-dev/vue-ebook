@@ -60,19 +60,15 @@ export default {
       let defaultTheme = getTheme(this.fileName)
       if (!defaultTheme) {
         defaultTheme = this.themeList[0].name
-        this.setDefaultTheme(defaultTheme)
         saveTheme(this.fileName, defaultTheme)
       }
+      this.setDefaultTheme(defaultTheme)
       this.themeList.forEach(theme => {
         this.rendition.themes.register(theme.name, theme.style)
       })
       this.rendition.themes.select(defaultTheme)
     },
-    initEpub () {
-      const epubUrl = 'http://192.168.0.223:8081/epub/'
-      const url = epubUrl + this.fileName + '.epub'
-      this.book = new Epub(url)
-      this.setCurrentBook(this.book)
+    initRendition () {
       this.rendition = this.book.renderTo('read', {
         width: window.innerWidth,
         height: window.innerHeight,
@@ -82,7 +78,21 @@ export default {
         this.initTheme()
         this.initFontSize()
         this.initFontFamily()
+        this.initGlobalStyle()
       })
+      this.rendition.hooks.content.register(contents => {
+        Promise.all([
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/daysOne.css`),
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/cabin.css`),
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/montserrat.css`),
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/tangerine.css`)
+        ]).then(() => {
+          console.log('字体全部加载完...')
+        })
+      })
+    },
+    // 初始化手势
+    initGesture () {
       this.rendition.on('touchstart', event => {
         this.touchStartX = event.changedTouches[0].clientX
         this.touchStartTime = event.timeStamp
@@ -101,15 +111,18 @@ export default {
         event.preventDefault()
         event.stopPropagation()
       })
-      this.rendition.hooks.content.register(contents => {
-        Promise.all([
-          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/daysOne.css`),
-          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/cabin.css`),
-          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/montserrat.css`),
-          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/tangerine.css`)
-        ]).then(() => {
-          console.log('字体全部加载完...')
-        })
+    },
+    initEpub () {
+      const url = process.env.VUE_APP_RES_URL + '/epub/' + this.fileName + '.epub'
+      this.book = new Epub(url)
+      this.setCurrentBook(this.book)
+      this.initRendition()
+      this.initGesture()
+      this.book.ready.then(() => {
+        return this.book.locations.generate(750 * (window.innerWidth / 375) * (getFontSize(this.fileName) / 16))
+      }).then(locations => {
+        // console.log(locations)
+        this.setBookAvailable(true)
       })
     }
   },
