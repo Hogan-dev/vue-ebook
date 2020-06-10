@@ -67,3 +67,11 @@ export function getFontSize (fileName) {
 export function saveFontSize (fileName, fontSize) {
   setBookObject(fileName, 'fontSize', fontSize)
 }
+
+export function getLocation (fileName) {
+  return getBookObject(fileName, 'location')
+}
+
+export function saveLocation (fileName, location) {
+  setBookObject(fileName, 'location', location)
+}

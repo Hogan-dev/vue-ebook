@@ -25,7 +25,8 @@
           </div>
         </div>
         <div class="text-wrapper">
-          <span>{{bookAvailable ? progress + '%' : '加载中...'}}</span>
+          <span class="progress-section-text">{{getSectionName}}</span>
+          <span>({{bookAvailable ? progress + '%' : '加载中...'}})</span>
         </div>
       </div>
     </div>
@@ -37,6 +38,17 @@ import { ebookMixin } from '../../utils/mixin'
 
 export default {
   mixins: [ebookMixin],
+  computed: {
+    getSectionName () {
+      if (this.section) {
+        const sectionInfo = this.currentBook.section(this.section)
+        if (sectionInfo && sectionInfo.href) {
+          return this.currentBook.navigation.get(sectionInfo.href).label
+        }
+      }
+      return ''
+    }
+  },
   methods: {
     // 松手后调用的方法
     onProgressChange (value) {
@@ -53,7 +65,9 @@ export default {
     },
     displayProgress () {
       const cfi = this.currentBook.locations.cfiFromPercentage(this.progress / 100)
-      this.currentBook.rendition.display(cfi)
+      this.currentBook.rendition.display(cfi).then(() => {
+        this.refreshLocation()
+      })
     },
     updateProgressBg () {
       this.$refs.progress.style.cssText = `background-size: ${this.progress}% 100%!important`
@@ -75,7 +89,9 @@ export default {
     displaySection () {
       const sectionInfo = this.currentBook.section(this.section)
       if (sectionInfo && sectionInfo.href) {
-        this.currentBook.rendition.display(sectionInfo.href)
+        this.currentBook.rendition.display(sectionInfo.href).then(() => {
+          this.refreshLocation()
+        })
       }
     }
   },
@@ -151,6 +167,9 @@ export default {
       padding: 0 px2rem(15);
       box-sizing: border-box;
       @include center;
+      .progress-section-text {
+        @include ellipsis;
+      }
     }
   }
 }

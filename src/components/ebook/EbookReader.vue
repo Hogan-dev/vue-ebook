@@ -14,13 +14,17 @@ export default {
   methods: {
     prevPage () {
       if (this.rendition) {
-        this.rendition.prev()
+        this.rendition.prev().then(() => {
+          this.refreshLocation()
+        })
         this.hideTitleAndMenu()
       }
     },
     nextPage () {
       if (this.rendition) {
-        this.rendition.next()
+        this.rendition.next().then(() => {
+          this.refreshLocation()
+        })
         this.hideTitleAndMenu()
       }
     },
@@ -79,6 +83,7 @@ export default {
         this.initFontSize()
         this.initFontFamily()
         this.initGlobalStyle()
+        this.refreshLocation()
       })
       this.rendition.hooks.content.register(contents => {
         Promise.all([
