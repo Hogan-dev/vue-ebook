@@ -3,7 +3,7 @@
     <div class="setting-wrapper" v-show="menuVisible && settingVisible === 2">
       <div class="setting-progress">
         <div class="read-time-wrapper">
-          <span class="read-time-text">111</span>
+          <span class="read-time-text">{{getReadTimeText()}}</span>
           <span class="icon-forward"></span>
         </div>
         <div class="progress-wrapper">
@@ -35,6 +35,7 @@
 
 <script>
 import { ebookMixin } from '../../utils/mixin'
+import { getReadTime } from '../../utils/localStorage'
 
 export default {
   mixins: [ebookMixin],
@@ -65,9 +66,7 @@ export default {
     },
     displayProgress () {
       const cfi = this.currentBook.locations.cfiFromPercentage(this.progress / 100)
-      this.currentBook.rendition.display(cfi).then(() => {
-        this.refreshLocation()
-      })
+      this.display(cfi)
     },
     updateProgressBg () {
       this.$refs.progress.style.cssText = `background-size: ${this.progress}% 100%!important`
@@ -89,9 +88,19 @@ export default {
     displaySection () {
       const sectionInfo = this.currentBook.section(this.section)
       if (sectionInfo && sectionInfo.href) {
-        this.currentBook.rendition.display(sectionInfo.href).then(() => {
-          this.refreshLocation()
-        })
+        this.display(sectionInfo.href)
+      }
+    },
+    // 获取阅读时间
+    getReadTimeText () {
+      return this.$t('book.haveRead').replace('$1', this.getReadtTimeByMinute(this.fileName))
+    },
+    getReadtTimeByMinute () {
+      const readTime = getReadTime(this.fileName)
+      if (!readTime) {
+        return 0
+      } else {
+        return Math.ceil(readTime / 60)
       }
     }
   },
