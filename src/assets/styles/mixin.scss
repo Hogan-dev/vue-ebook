@@ -16,6 +16,12 @@ $ratio: 375 / 10;
   align-items: center;
 }
 
+@mixin right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 @mixin ellipsis {
   text-overflow: ellipsis;
   overflow: hidden;
