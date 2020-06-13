@@ -1,3 +1,5 @@
+import { getReadTime } from './localStorage'
+
 export const FONT_SIZE_LIST = [
   { fontSize: 12 },
   { fontSize: 14 },
@@ -72,5 +74,14 @@ export function setGlobalTheme (href) {
     link.setAttribute('type', 'text/css')
     link.setAttribute('href', href)
     document.getElementsByTagName('head')[0].appendChild(link)
+  }
+}
+
+export function getReadtTimeByMinute (fileName) {
+  const readTime = getReadTime(fileName)
+  if (!readTime) {
+    return 0
+  } else {
+    return Math.ceil(readTime / 60)
   }
 }
