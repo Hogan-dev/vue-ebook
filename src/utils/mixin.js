@@ -15,7 +15,9 @@ export const ebookMixin = {
       'defaultTheme',
       'bookAvailable',
       'progress',
-      'section'
+      'section',
+      'cover',
+      'metadata'
     ]),
     themeList () {
       return themeList(this)
@@ -33,7 +35,9 @@ export const ebookMixin = {
       'setDefaultTheme',
       'setBookAvailable',
       'setProgress',
-      'setSection'
+      'setSection',
+      'setCover',
+      'setMetadata'
     ]),
     initGlobalStyle () {
       switch (this.defaultTheme) {
