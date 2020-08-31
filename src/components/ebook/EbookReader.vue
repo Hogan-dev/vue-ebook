@@ -8,6 +8,7 @@
 import { ebookMixin } from '../../utils/mixin'
 import Epub from 'epubjs'
 import { getLocation, getFontFamily, saveFontFamily, getFontSize, saveFontSize, saveTheme, getTheme } from '../../utils/localStorage'
+import { flatten } from '../../utils/book'
 global.ePub = Epub
 export default {
   mixins: [ebookMixin],
@@ -121,6 +122,9 @@ export default {
       })
       this.book.loaded.metadata.then(metadata => {
         this.setMetadata(metadata)
+      })
+      this.book.loaded.navigation.then(nav => {
+        console.log(flatten(nav.toc))
       })
     },
     initEpub () {
